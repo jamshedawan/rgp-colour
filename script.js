@@ -1,36 +1,57 @@
-window.addEventListener("load", checkInternetConnection);
+const redSlider = document.getElementById("redSlider");
+const greenSlider = document.getElementById("greenSlider");
+const blueSlider = document.getElementById("blueSlider");
 
-function checkInternetConnection() {
-  const statusText = document.getElementById("statusText");
-  const ipAdressText = document.getElementById("IP AdresssText");
-  const NetworkStrengthText = document.getElementById("NetworkStrengthText");
+const redValueSpan = document.getElementById("redValue");
+const greenValueSpan = document.getElementById("greenValue");
+const blueValueSpan = document.getElementById("blueValue");
 
-  statusText.textContent = 'Checking....';
+const colorBox = document.getElementById("color-box");
+const copyButton = document.getElementById("copyButton");
+const inputType = document.getElementById("inputType");
 
-  if (navigator.onLine) {
-    fetch( 'https://api.ipify.org?format=json')
-    .then((response) => response.json())
-    .then((data) => {
-        NetworkStrengthText.textContent = data.ip;
-        statusText.textContent = "Connected";
+redSlider.addEventListener('input', updateColor);
+greenSlider.addEventListener('input', updateColor);
+blueSlider.addEventListener('input', updateColor);
+copyButton.addEventListener('click',copyRGBValue);
 
-        const connection = navigator.connection;
 
-        const NetworkStrength = connection
-            ? connection.downlink + "Mbps"
-            : "Unknown";
-        NetworkStrengthText.textContent = NetworkStrength;
-    })
-    .catch(() => {
-        statusText.textContent = "Disconnected";
-        ipAdressText.textContent = "-";
-        NetworkStrengthText.textContent = "-";
-    });
+function updateColor() {
+    const redValue = redSlider.value;
+    const greenValue = greenSlider.value;
+    const blueValue = blueSlider.value;
 
-  } else {
-    statusText.textContent = "Disconnected";
-    ipAdressText.textContent = "-";
-    NetworkStrengthText.textContent = "-";
-  }
+    const rgbColor = `rgb(${redValue}, ${greenValue}, ${blueValue})`;
+
+    colorBox.style.backgroundColor = rgbColor;
+
+
+    redValueSpan.textContent = redValue;
+    greenValueSpan.textContent = greenValue;
+    blueValueSpan.textContent = blueValue;
+
+
+    inputType.textContent = rgbColor;
+
+
 }
 
+updateColor();
+
+function copyRGBValue(){
+
+
+    const redValue = redSlider.value;
+    const greenValue = greenSlider.value;
+    const blueValue = blueSlider.value;
+    const rgbColor = `rgb(${redValue}, ${greenValue}, ${blueValue})`;
+    
+    navigator.clipboard.writeText(rgbColor)
+    .then(()=>{
+     alert("RGB Color Value Copy to clipboard" + rgbColor); 
+    })
+    .catch((error)=>{
+        console.error("Falied to copy RGB Value:",error);
+    })
+
+}
